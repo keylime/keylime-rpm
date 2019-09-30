@@ -1,47 +1,107 @@
-%define name python-keylime
-%define version 1.2
-%define unmangled_version 1.2
-%define release 1
+%global srcname keylime
+%define name keylime
+%define version 5.1.0
+%define release 5
 
-Summary: TPM-based key bootstrapping and system integrity measurement system
-for cloud
-Name: %{name}
+Name:    %{name}
 Version: %{version}
 Release: %{release}
-Source0: %{name}.tar
-License: BSD-2-Clause
-BuildArch: noarch
-Group: Development/Libraries
-Vendor: MIT Lincoln Laboratory <nabil@ll.mit.edu>
-Url: https://github.com/mit-ll/python-keylime
-AutoReq: no
-Requires: epel-release, git, wget, python-setuptools >= 0.7, python-devel,
-gcc, automake, gcc-c++, openssl, openssl-devel, libtool
+Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
-#%define PipRequires m2crypto pycryptodomex tornado zmq
+BuildArch:      noarch
+
+Group: Development/Libraries
+Vendor: Keylime Developers
+URL:            https://github.com/keylime/keylime
+Source0:        https://github.com/keylime/keylime/archive/%{version}.tar.gz
+License: MIT
+
+AutoReq: no
+
+BuildRequires: swig
+BuildRequires: openssl-devel
+BuildRequires: python3-setuptools
+BuildRequires: python3-devel
+BuildRequires: systemd
+
+Requires: procps-ng
+Requires: python3-pyyaml
+Requires: python3-m2crypto
+Requires: python3-cryptography
+Requires: python3-tornado
+Requires: python3-simplejson
+Requires: python3-requests
+Requires: python3-zmq
+Requires: tpm2-tss
+Requires: tpm2-tools
+Requires: tpm2-abrmd
 
 %description
-This library provides a cloud verifier infrastructure to derive keys
-from TPMs in the cloud.
+Keylime is a TPM based highly scalable remote boot attestation
+and runtime integrity measurement solution.
 
 %prep
-#%setup -q -n %{name}
+%autosetup -n %{srcname}-%{version}
+
+%build
+%py3_build
 
 %install
-mkdir -p %{buildroot}%{_bindir}
-cp %{SOURCE0} %{buildroot}%{_bindir}
-cd %{buildroot}%{_bindir}
-tar -xf %{name}.tar
-rm %{name}.tar
+%py3_install
+mkdir -p %{buildroot}%{_unitdir}
 
-%post
-#pip2.7 install %{PipRequires} --user
-cd %{_bindir}/%{name}
-sudo sh installer.sh -co
+rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
+install -d -m 755 %{buildroot}%{_sysconfdir}/%{srcname}.conf
+
+
+mv ./services/%{srcname}_agent.service.example ./services/%{srcname}_agent.service
+mv ./services/%{srcname}_verifier.service.example ./services/%{srcname}_verifier.service
+mv ./services/%{srcname}_registrar.service.example ./services/%{srcname}_registrar.service
+
+install -m 644 ./services/%{srcname}_agent.service \
+    %{buildroot}%{_unitdir}/%{srcname}_agent.service
+
+install -m 644 ./services/%{srcname}_verifier.service \
+    %{buildroot}%{_unitdir}/%{srcname}_verifier.service
+
+install -m 644 ./services/%{srcname}_agent.service \
+    %{buildroot}%{_unitdir}/%{srcname}_registrar.service
 
 %files
-%{_bindir}/%{name}/*
+%license LICENSE
+%doc README.md
+%{python3_sitelib}/%{srcname}-*.egg-info/
+%{python3_sitelib}/%{srcname}
+%{_bindir}/%{srcname}_verifier
+%{_bindir}/%{srcname}_registrar
+%{_bindir}/%{srcname}_agent
+%{_bindir}/%{srcname}_tenant
+%{_bindir}/%{srcname}_ca
+%{_bindir}/%{srcname}_provider_platform_init
+%{_bindir}/%{srcname}_provider_registrar
+%{_bindir}/%{srcname}_provider_vtpm_add
+%{_bindir}/%{srcname}_userdata_encrypt
+%{_bindir}/%{srcname}_ima_emulator
+%{_bindir}/%{srcname}_webapp
+%{_prefix}/%{srcname}/static/*
+%{_sysconfdir}/%{srcname}.conf
+%config(noreplace) %{_sysconfdir}/%{srcname}.conf
+%{_unitdir}/*
+
+%defattr(755,root,root)
+%{python3_sitelib}/%{srcname}/ca_util.py
+%{python3_sitelib}/%{srcname}/cloud_agent.py
+%{python3_sitelib}/%{srcname}/cloud_verifier_common.py
+%{python3_sitelib}/%{srcname}/cloud_verifier_tornado.py
+%{python3_sitelib}/%{srcname}/ima_emulator_adapter.py
+%{python3_sitelib}/%{srcname}/provider_platform_init.py
+%{python3_sitelib}/%{srcname}/provider_registrar.py
+%{python3_sitelib}/%{srcname}/provider_vtpm_add.py
+%{python3_sitelib}/%{srcname}/registrar.py
+%{python3_sitelib}/%{srcname}/tenant.py
+%{python3_sitelib}/%{srcname}/tenant_webapp.py
+%{python3_sitelib}/%{srcname}/user_data_encrypt.py
 
 %changelog
-* Wed Jul 18 2018 Huzefa Mandviwala <huzefam@bu.edu> 1.2-1
+* Mon Sep 30 2019 Luke Hinds <lhinds@redhat.com> 5.1.0-5
 – Initial Packaging
