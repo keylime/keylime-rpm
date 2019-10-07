@@ -1,7 +1,7 @@
 %global srcname keylime
 %define name keylime
-%define version 5.1.0
-%define release 5
+%define version 5.2.0
+%define release 1
 
 Name:    %{name}
 Version: %{version}
@@ -101,5 +101,5 @@ rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 %{python3_sitelib}/%{srcname}/user_data_encrypt.py
 
 %changelog
-* Mon Sep 30 2019 Luke Hinds <lhinds@redhat.com> 5.1.0-5
+* Mon Oct 7 2019 Luke Hinds <lhinds@redhat.com> 5.2.0
 – Initial Packaging
