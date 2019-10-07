@@ -101,5 +101,5 @@ rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 %{python3_sitelib}/%{srcname}/user_data_encrypt.py
 
 %changelog
-* Mon Oct 7 2019 Luke Hinds <lhinds@redhat.com> 5.2.0
+* Mon Oct 7 2019 Luke Hinds <lhinds@redhat.com> 5.2.0-1
 – Initial Packaging
