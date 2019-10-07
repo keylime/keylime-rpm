@@ -53,11 +53,6 @@ mkdir -p %{buildroot}%{_unitdir}
 rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 install -d -m 755 %{buildroot}%{_sysconfdir}/%{srcname}.conf
 
-
-mv ./services/%{srcname}_agent.service.example ./services/%{srcname}_agent.service
-mv ./services/%{srcname}_verifier.service.example ./services/%{srcname}_verifier.service
-mv ./services/%{srcname}_registrar.service.example ./services/%{srcname}_registrar.service
-
 install -m 644 ./services/%{srcname}_agent.service \
     %{buildroot}%{_unitdir}/%{srcname}_agent.service
 
