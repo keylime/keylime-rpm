@@ -49,9 +49,10 @@ and runtime integrity measurement solution.
 %install
 %py3_install
 mkdir -p %{buildroot}%{_unitdir}
+mkdir -p %{buildroot}%{_sysconfdir}
 
-rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
-install -d -m 755 %{buildroot}%{_sysconfdir}/%{srcname}.conf
+install -m 644 %{srcname}.conf \
+    %{buildroot}%{_sysconfdir}/%{srcname}.conf
 
 install -m 644 ./services/%{srcname}_agent.service \
     %{buildroot}%{_unitdir}/%{srcname}_agent.service
@@ -61,6 +62,8 @@ install -m 644 ./services/%{srcname}_verifier.service \
 
 install -m 644 ./services/%{srcname}_agent.service \
     %{buildroot}%{_unitdir}/%{srcname}_registrar.service
+
+rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 
 %files
 %license LICENSE
