@@ -1,6 +1,6 @@
 # Keylime RPM distribution
 
-This reposiory contains SPEC file used for RPM creation of the Keylime Project.
+This repository contains SPEC file used for RPM creation of the Keylime Project.
 
 ### Contribute
 
