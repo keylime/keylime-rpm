@@ -1,22 +1,15 @@
 %global srcname keylime
-%define name keylime
-%define version 5.2.0
-%define release 1
 
-Name:    %{name}
-Version: %{version}
-Release: %{release}
+Name:    keylime
+Version: 5.4.1
+Release: 1%{?dist}
 Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
 BuildArch:      noarch
 
-Group: Development/Libraries
-Vendor: Keylime Developers
 URL:            https://github.com/keylime/keylime
 Source0:        https://github.com/keylime/keylime/archive/%{version}.tar.gz
 License: MIT
-
-AutoReq: no
 
 BuildRequires: swig
 BuildRequires: openssl-devel
@@ -49,7 +42,6 @@ and runtime integrity measurement solution.
 %install
 %py3_install
 mkdir -p %{buildroot}%{_unitdir}
-mkdir -p %{buildroot}%{_sysconfdir}
 
 install -m 644 %{srcname}.conf \
     %{buildroot}%{_sysconfdir}/%{srcname}.conf
@@ -62,8 +54,6 @@ install -m 644 ./services/%{srcname}_verifier.service \
 
 install -m 644 ./services/%{srcname}_agent.service \
     %{buildroot}%{_unitdir}/%{srcname}_registrar.service
-
-rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 
 %files
 %license LICENSE
@@ -81,8 +71,6 @@ rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 %{_bindir}/%{srcname}_userdata_encrypt
 %{_bindir}/%{srcname}_ima_emulator
 %{_bindir}/%{srcname}_webapp
-%{_prefix}/%{srcname}/static/*
-%{_sysconfdir}/%{srcname}.conf
 %config(noreplace) %{_sysconfdir}/%{srcname}.conf
 %{_unitdir}/*
 
@@ -101,5 +89,5 @@ rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 %{python3_sitelib}/%{srcname}/user_data_encrypt.py
 
 %changelog
-* Mon Oct 7 2019 Luke Hinds <lhinds@redhat.com> 5.2.0-1
+* Mon Dec 12 2019 Luke Hinds <lhinds@redhat.com> 5.4.1-1
 – Initial Packaging
