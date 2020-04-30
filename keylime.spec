@@ -1,28 +1,24 @@
 %global srcname keylime
-%define name keylime
-%define version 5.2.0
-%define release 1
 
-Name:    %{name}
-Version: %{version}
-Release: %{release}
+Name:    keylime
+Version: 5.6.0
+Release: 1%{?dist}
 Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
 BuildArch:      noarch
 
-Group: Development/Libraries
-Vendor: Keylime Developers
 URL:            https://github.com/keylime/keylime
 Source0:        https://github.com/keylime/keylime/archive/%{version}.tar.gz
-License: MIT
-
-AutoReq: no
+# Main program: BSD
+# Icons: MIT
+License: BSD and MIT
 
 BuildRequires: swig
 BuildRequires: openssl-devel
 BuildRequires: python3-setuptools
 BuildRequires: python3-devel
 BuildRequires: systemd
+BuildRequires: systemd-rpm-macros
 
 Requires: procps-ng
 Requires: python3-pyyaml
@@ -30,6 +26,7 @@ Requires: python3-m2crypto
 Requires: python3-cryptography
 Requires: python3-tornado
 Requires: python3-simplejson
+Requires: python3-sqlalchemy
 Requires: python3-requests
 Requires: python3-zmq
 Requires: tpm2-tss
@@ -49,24 +46,39 @@ and runtime integrity measurement solution.
 %install
 %py3_install
 mkdir -p %{buildroot}%{_unitdir}
-mkdir -p %{buildroot}%{_sysconfdir}
+mkdir -p %{buildroot}/%{_sharedstatedir}/keylime
 
-install -m 644 %{srcname}.conf \
+install -pm 644 %{srcname}.conf \
     %{buildroot}%{_sysconfdir}/%{srcname}.conf
 
-install -m 644 ./services/%{srcname}_agent.service \
+install -pm 644 ./services/%{srcname}_agent.service \
     %{buildroot}%{_unitdir}/%{srcname}_agent.service
 
-install -m 644 ./services/%{srcname}_verifier.service \
+install -pm 644 ./services/%{srcname}_verifier.service \
     %{buildroot}%{_unitdir}/%{srcname}_verifier.service
 
-install -m 644 ./services/%{srcname}_agent.service \
+install -pm 644 ./services/%{srcname}_agent.service \
     %{buildroot}%{_unitdir}/%{srcname}_registrar.service
 
-rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
+cp -r ./tpm_cert_store %{buildroot}%{_sharedstatedir}/keylime/
+
+%post
+%systemd_post %{srcname}_agent.service
+%systemd_post %{srcname}_verifier.service
+%systemd_post %{srcname}_registrar.service
+
+%preun
+%systemd_preun %{srcname}_agent.service
+%systemd_preun %{srcname}_verifier.service
+%systemd_preun %{srcname}_registrar.service
+
+%postun
+%systemd_postun_with_restart %{srcname}_agent.service
+%systemd_postun_with_restart %{srcname}_verifier.service
+%systemd_postun_with_restart %{srcname}_registrar.service
 
 %files
-%license LICENSE
+%license LICENSE keylime/static/icons/ICON-LICENSE
 %doc README.md
 %{python3_sitelib}/%{srcname}-*.egg-info/
 %{python3_sitelib}/%{srcname}
@@ -81,25 +93,19 @@ rm %{buildroot}%{_prefix}/package_default/%{srcname}.conf
 %{_bindir}/%{srcname}_userdata_encrypt
 %{_bindir}/%{srcname}_ima_emulator
 %{_bindir}/%{srcname}_webapp
-%{_prefix}/%{srcname}/static/*
-%{_sysconfdir}/%{srcname}.conf
 %config(noreplace) %{_sysconfdir}/%{srcname}.conf
 %{_unitdir}/*
-
-%defattr(755,root,root)
-%{python3_sitelib}/%{srcname}/ca_util.py
-%{python3_sitelib}/%{srcname}/cloud_agent.py
-%{python3_sitelib}/%{srcname}/cloud_verifier_common.py
-%{python3_sitelib}/%{srcname}/cloud_verifier_tornado.py
-%{python3_sitelib}/%{srcname}/ima_emulator_adapter.py
-%{python3_sitelib}/%{srcname}/provider_platform_init.py
-%{python3_sitelib}/%{srcname}/provider_registrar.py
-%{python3_sitelib}/%{srcname}/provider_vtpm_add.py
-%{python3_sitelib}/%{srcname}/registrar.py
-%{python3_sitelib}/%{srcname}/tenant.py
-%{python3_sitelib}/%{srcname}/tenant_webapp.py
-%{python3_sitelib}/%{srcname}/user_data_encrypt.py
+%{_sharedstatedir}/keylime/tpm_cert_store/*
 
 %changelog
-* Mon Oct 7 2019 Luke Hinds <lhinds@redhat.com> 5.2.0-1
+* Thu April 30 2020 Luke Hinds <lhinds@redhat.com> 5.5.0-1
+- Updating for Keylime release v5.6.0
+
+* Thu Feb 06 2020 Luke Hinds <lhinds@redhat.com> 5.5.0-1
+- Updating for Keylime release v5.5.0
+
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.4.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
+* Thu Dec 12 2019 Luke Hinds <lhinds@redhat.com> 5.4.1-1
 – Initial Packaging
