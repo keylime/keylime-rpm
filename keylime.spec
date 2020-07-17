@@ -1,7 +1,7 @@
 %global srcname keylime
 
 Name:    keylime
-Version: 5.6.0
+Version: 5.7.0
 Release: 1%{?dist}
 Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
@@ -98,6 +98,9 @@ cp -r ./tpm_cert_store %{buildroot}%{_sharedstatedir}/keylime/
 %{_sharedstatedir}/keylime/tpm_cert_store/*
 
 %changelog
+* Fri July 17 2020 Luke Hinds <lhinds@redhat.com> 5.7.0-1
+- Updating for Keylime release v5.7.0
+
 * Thu April 30 2020 Luke Hinds <lhinds@redhat.com> 5.5.0-1
 - Updating for Keylime release v5.6.0
 
