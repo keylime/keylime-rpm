@@ -1,7 +1,7 @@
 %global srcname keylime
 
 Name:    keylime
-Version: 5.7.0
+Version: 5.7.2
 Release: 1%{?dist}
 Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
@@ -11,12 +11,13 @@ URL:            https://github.com/keylime/keylime
 Source0:        https://github.com/keylime/keylime/archive/%{version}.tar.gz
 # Main program: BSD
 # Icons: MIT
-License: BSD and MIT
+License: ASL 2.0 and MIT
 
 BuildRequires: swig
 BuildRequires: openssl-devel
 BuildRequires: python3-setuptools
 BuildRequires: python3-devel
+BuildRequires: python3-pbr
 BuildRequires: systemd
 BuildRequires: systemd-rpm-macros
 
@@ -41,9 +42,11 @@ and runtime integrity measurement solution.
 %autosetup -n %{srcname}-%{version}
 
 %build
+export PBR_VERSION=%{version}
 %py3_build
 
 %install
+export PBR_VERSION=%{version}
 %py3_install
 mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}/%{_sharedstatedir}/keylime
@@ -98,11 +101,14 @@ cp -r ./tpm_cert_store %{buildroot}%{_sharedstatedir}/keylime/
 %{_sharedstatedir}/keylime/tpm_cert_store/*
 
 %changelog
-* Fri July 17 2020 Luke Hinds <lhinds@redhat.com> 5.7.0-1
-- Updating for Keylime release v5.7.0
+* Fri Jul 17 2020 Luke Hinds <lhinds@redhat.com> 5.7.2-1
+- Updating for Keylime release v5.7.2
 
-* Thu April 30 2020 Luke Hinds <lhinds@redhat.com> 5.5.0-1
-- Updating for Keylime release v5.6.0
+* Tue May 26 2020 Miro Hrončok <mhroncok@redhat.com> - 5.6.2-2
+- Rebuilt for Python 3.9
+
+* Fri May 01 2020 Luke Hinds <lhinds@redhat.com> 5.6.2-1
+- Updating for Keylime release v5.6.2
 
 * Thu Feb 06 2020 Luke Hinds <lhinds@redhat.com> 5.5.0-1
 - Updating for Keylime release v5.5.0
