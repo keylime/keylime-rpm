@@ -1,7 +1,7 @@
 %global srcname keylime
 
 Name:    keylime
-Version: 5.7.2
+Version: 6.0.0
 Release: 1%{?dist}
 Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
@@ -17,11 +17,14 @@ BuildRequires: swig
 BuildRequires: openssl-devel
 BuildRequires: python3-setuptools
 BuildRequires: python3-devel
+BuildRequires: python3-dbus
 BuildRequires: python3-pbr
 BuildRequires: systemd
 BuildRequires: systemd-rpm-macros
 
 Requires: procps-ng
+Requires: python3-alembic
+Requires: python3-pyasn1
 Requires: python3-pyyaml
 Requires: python3-m2crypto
 Requires: python3-cryptography
@@ -90,6 +93,7 @@ cp -r ./tpm_cert_store %{buildroot}%{_sharedstatedir}/keylime/
 %{_bindir}/%{srcname}_agent
 %{_bindir}/%{srcname}_tenant
 %{_bindir}/%{srcname}_ca
+%{_bindir}/%{srcname}_migrations_apply
 %{_bindir}/%{srcname}_provider_platform_init
 %{_bindir}/%{srcname}_provider_registrar
 %{_bindir}/%{srcname}_provider_vtpm_add
@@ -101,6 +105,18 @@ cp -r ./tpm_cert_store %{buildroot}%{_sharedstatedir}/keylime/
 %{_sharedstatedir}/keylime/tpm_cert_store/*
 
 %changelog
+* Wed Feb 24 2021 Luke Hinds <lhinds@redhat.com> 6.0.0-1
+- Updating for Keylime release v6.0.0
+
+* Tue Feb 02 2021 Luke Hinds <lhinds@redhat.com> 5.8.1-1
+- Updating for Keylime release v5.8.1
+
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.8.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
+* Sat Jan 23 2021 Luke Hinds <lhinds@redhat.com> 5.8.0-1
+- Updating for Keylime release v5.8.0
+
 * Fri Jul 17 2020 Luke Hinds <lhinds@redhat.com> 5.7.2-1
 - Updating for Keylime release v5.7.2
 
