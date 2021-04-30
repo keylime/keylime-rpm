@@ -1,7 +1,7 @@
 %global srcname keylime
 
 Name:    keylime
-Version: 6.0.0
+Version: 6.1.0
 Release: 1%{?dist}
 Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
