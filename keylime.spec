@@ -13,11 +13,7 @@ Source0:        https://github.com/keylime/keylime/archive/%{version}.tar.gz
 # Icons: MIT
 License: ASL 2.0 and MIT
 
-BuildRequires: swig
-BuildRequires: openssl-devel
 BuildRequires: python3-setuptools
-BuildRequires: python3-devel
-BuildRequires: python3-dbus
 BuildRequires: systemd
 BuildRequires: systemd-rpm-macros
 
