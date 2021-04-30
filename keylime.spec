@@ -56,7 +56,7 @@ install -pm 644 ./services/%{srcname}_agent.service \
 install -pm 644 ./services/%{srcname}_verifier.service \
     %{buildroot}%{_unitdir}/%{srcname}_verifier.service
 
-install -pm 644 ./services/%{srcname}_agent.service \
+install -pm 644 ./services/%{srcname}_registrar.service \
     %{buildroot}%{_unitdir}/%{srcname}_registrar.service
 
 cp -r ./tpm_cert_store %{buildroot}%{_sharedstatedir}/keylime/
