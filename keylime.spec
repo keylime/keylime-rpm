@@ -1,7 +1,7 @@
 %global srcname keylime
 
 Name:    keylime
-Version: 6.0.0
+Version: 6.1.0
 Release: 1%{?dist}
 Summary: Open source TPM software for Bootstrapping and Maintaining Trust
 
@@ -13,12 +13,7 @@ Source0:        https://github.com/keylime/keylime/archive/%{version}.tar.gz
 # Icons: MIT
 License: ASL 2.0 and MIT
 
-BuildRequires: swig
-BuildRequires: openssl-devel
 BuildRequires: python3-setuptools
-BuildRequires: python3-devel
-BuildRequires: python3-dbus
-BuildRequires: python3-pbr
 BuildRequires: systemd
 BuildRequires: systemd-rpm-macros
 
@@ -45,11 +40,9 @@ and runtime integrity measurement solution.
 %autosetup -n %{srcname}-%{version}
 
 %build
-export PBR_VERSION=%{version}
 %py3_build
 
 %install
-export PBR_VERSION=%{version}
 %py3_install
 mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}/%{_sharedstatedir}/keylime
@@ -63,7 +56,7 @@ install -pm 644 ./services/%{srcname}_agent.service \
 install -pm 644 ./services/%{srcname}_verifier.service \
     %{buildroot}%{_unitdir}/%{srcname}_verifier.service
 
-install -pm 644 ./services/%{srcname}_agent.service \
+install -pm 644 ./services/%{srcname}_registrar.service \
     %{buildroot}%{_unitdir}/%{srcname}_registrar.service
 
 cp -r ./tpm_cert_store %{buildroot}%{_sharedstatedir}/keylime/
