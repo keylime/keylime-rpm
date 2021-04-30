@@ -18,7 +18,6 @@ BuildRequires: openssl-devel
 BuildRequires: python3-setuptools
 BuildRequires: python3-devel
 BuildRequires: python3-dbus
-BuildRequires: python3-pbr
 BuildRequires: systemd
 BuildRequires: systemd-rpm-macros
 
@@ -45,11 +44,9 @@ and runtime integrity measurement solution.
 %autosetup -n %{srcname}-%{version}
 
 %build
-export PBR_VERSION=%{version}
 %py3_build
 
 %install
-export PBR_VERSION=%{version}
 %py3_install
 mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}/%{_sharedstatedir}/keylime
